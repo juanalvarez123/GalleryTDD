@@ -27,3 +27,29 @@ class UserTestCase(TestCase):
 
         self.assertEquals(json_response[0]['fields']['name'], 'Portafolio 2')
         self.assertTrue(json_response[0]['fields']['public'])
+
+    def test_user_login(self):
+        User.objects.create_user(username='angie.eraso', email='angie.eraso@uniandes.edu.co', password='12345')
+
+        user_login = {
+            'username': 'angie.eraso',
+            'password': '12345'
+        }
+        response = self.client.post('/user/login/', data=json.dumps(user_login), content_type='application/json')
+        json_response = json.loads(response.content)
+
+        self.assertEquals(json_response[0]['fields']['username'], 'angie.eraso')
+        self.assertEquals(json_response[0]['fields']['email'], 'angie.eraso@uniandes.edu.co')
+
+    def test_another_user_login(self):
+        User.objects.create_user(username='js.alvareze', email='js.alvareze@uniandes.edu.co', password='12345')
+
+        user_login = {
+            'username': 'js.alvareze',
+            'password': '12345'
+        }
+        response = self.client.post('/user/login/', data=json.dumps(user_login), content_type='application/json')
+        json_response = json.loads(response.content)
+
+        self.assertEquals(json_response[0]['fields']['username'], 'js.alvareze')
+        self.assertEquals(json_response[0]['fields']['email'], 'js.alvareze@uniandes.edu.co')
