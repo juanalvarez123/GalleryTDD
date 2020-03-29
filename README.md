@@ -1,7 +1,6 @@
-# Kata rest TDD 1
+# Kata rest TDD 1 - MISO 4101 202010
 
-Semana 9
-Actividad virtual 41: Kata REST en parejas
+Semana 9, actividad virtual 41: Kata REST en parejas
 
 ## Integrantes
 
