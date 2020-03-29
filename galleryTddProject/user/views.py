@@ -32,3 +32,22 @@ def login(request):
             return HttpResponse(serializers.serialize("json", user_list))
         else:
             return HttpResponseNotFound('<h1>User not found</h1>')
+
+@csrf_exempt
+def manage_user(request, user_id):
+    if request.method == 'PUT':
+        json_user = json.loads(request.body)
+        first_name = json_user['first_name']
+        last_name = json_user['last_name']
+        email = json_user['email']
+
+        user_model = User.objects.filter(id=user_id)
+
+        if len(user_model) == 1:
+            user_model[0].first_name = first_name
+            user_model[0].last_name = last_name
+            user_model[0].email = email
+            user_model[0].save()
+            return HttpResponse(serializers.serialize("json", user_model))
+        else:
+            return HttpResponseNotFound('<h1>User not found</h1>')
