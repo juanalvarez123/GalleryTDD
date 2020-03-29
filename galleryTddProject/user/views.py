@@ -51,3 +51,19 @@ def manage_user(request, user_id):
             return HttpResponse(serializers.serialize("json", user_model))
         else:
             return HttpResponseNotFound('<h1>User not found</h1>')
+
+@csrf_exempt
+def manage_portafolio(request, username, image_id):
+    if request.method == 'PUT':
+        json_image = json.loads(request.body)
+        public = json_image['public']
+        user = User.objects.filter(username=username)[0]
+
+        image_model = Image.objects.filter(id=image_id, user=user)
+
+        if len(image_model) == 1:
+            image_model[0].public = public
+            image_model[0].save()
+            return HttpResponse(serializers.serialize("json", image_model))
+        else:
+            return HttpResponseNotFound('<h1>Image not found</h1>')
