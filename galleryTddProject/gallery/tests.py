@@ -37,3 +37,20 @@ class GalleryTestCase(TestCase):
         response=self.client.post('/gallery/addUser/',json.dumps({"username": "testUser", "first_name": "Test", "last_name": "User", "password": "AnyPas#5", "email": "test@test.com"}), content_type='application/json')
         current_data=json.loads(response.content)
         self.assertEqual(current_data[0]['fields']['username'],'testUser')
+
+    def test_add_image(self):
+        user_model = User.objects.create_user(username='admin', password='12345678', first_name='administrador',
+                                              last_name='administrador', email='administrador@hotmail.com')
+        image = {'name': 'zapatos',
+                 'url': 'No',
+                 'description': 'zapatosImage',
+                 'type': 'jpg',
+                 'userId': user_model.id}
+
+        response = self.client.post('/gallery/', json.dumps(image), content_type='application/json')
+        current_data = json.loads(response.content)
+        self.assertEqual(current_data['quantity'], 1)
+        self.assertEqual(current_data['image']['url'], 'No')
+        self.assertEqual(current_data['image']['description'], 'zapatosImage')
+        self.assertEqual(current_data['image']['type'], 'jpg')
+        self.assertEqual(current_data['image']['name'], 'zapatos')
