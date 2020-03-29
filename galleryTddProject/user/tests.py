@@ -41,6 +41,8 @@ class UserTestCase(TestCase):
         self.assertEquals(json_response[0]['fields']['username'], 'angie.eraso')
         self.assertEquals(json_response[0]['fields']['email'], 'angie.eraso@uniandes.edu.co')
 
+
+
     def test_another_user_login(self):
         User.objects.create_user(username='js.alvareze', email='js.alvareze@uniandes.edu.co', password='12345')
 
@@ -53,3 +55,19 @@ class UserTestCase(TestCase):
 
         self.assertEquals(json_response[0]['fields']['username'], 'js.alvareze')
         self.assertEquals(json_response[0]['fields']['email'], 'js.alvareze@uniandes.edu.co')
+
+
+    def test_update_user(self):
+        userCreated=User.objects.create_user(username='konan', email='konan@gmail.com', password='12345')
+        user_update = {
+            'first_name':'mauricio',
+            'last_name':'gutierrez',
+            'email':'f@hotmail.com'
+        }
+        response = self.client.put('/user/'+str(userCreated.id), data=json.dumps(user_update), content_type='application/json')
+        json_response = json.loads(response.content)
+
+        self.assertEquals(json_response[0]['fields']['first_name'], 'mauricio')
+        self.assertEquals(json_response[0]['fields']['last_name'], 'gutierrez')
+        self.assertEquals(json_response[0]['fields']['email'], 'f@hotmail.com')
+
