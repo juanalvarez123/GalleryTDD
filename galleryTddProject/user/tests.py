@@ -8,8 +8,8 @@ from gallery.models import Image
 class UserTestCase(TestCase):
 
     def test_get_public_gallery(self):
-        new_user = User.objects.create_user(username='js.alvareze', password='12345',
-                                            email='js.alvareze@uniandes.edu.co', first_name='Juan Sebastian')
+        new_user = User.objects.create_user(username='camilo.mera', password='abcde',
+                                            email='camilo.mera@uniandes.edu.co', first_name='Juan Sebastian')
 
         Image.objects.create(name='Portafolio 1', url='No', description='Descripción para portafolio 1',
                              type='jpg', user=new_user, public=False)
@@ -20,7 +20,7 @@ class UserTestCase(TestCase):
         params = {
             'public': True
         }
-        response = self.client.get('/user/js.alvareze/gallery/', data=params, content_type='application/json')
+        response = self.client.get('/user/camilo.mera/gallery/', data=params, content_type='application/json')
         json_response = json.loads(response.content)
 
         self.assertEquals(len(json_response), 1)
@@ -90,3 +90,11 @@ class UserTestCase(TestCase):
 
         self.assertEquals(json_response[0]['fields']['name'], 'Portafolio 2')
         self.assertFalse(json_response[0]['fields']['public'])
+
+    def test_add_user(self):
+        response = self.client.post('/user/', json.dumps(
+            {"username": "testUser", "first_name": "Test", "last_name": "User", "password": "AnyPas#5",
+             "email": "test@test.com"}), content_type='application/json')
+
+        current_data = json.loads(response.content)
+        self.assertEqual(current_data[0]['fields']['username'], 'testUser')
